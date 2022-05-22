@@ -12,8 +12,8 @@ Two functions are developed now. More are coming
           this can turn your semi-auto weapon into full auto. when you press the left ley of the mouse, the aim sight will only move down once.
           
 2. Map distance measuring
-    a) Press 'ctrl+l' to activate or deactivate the matching mode
-        when the matching mode is on, click 2 points on the map (as the matching scale for 100m, usually a small block)
-    b) Press 'ctrl+p' to activate or deactivate the measuring mode
-        when the measuring mode is on, click 2 points on the map, the distance will show in the pop
+    a) Press 'ctrl' and click mouse left key for calibration
+         click 2 points on the map (as the matching scale for 100m, usually a small block)
+    b) Press 'shift' and click mouse left key to measure
+         click 2 points on the map, the distance will show in the pop
     
