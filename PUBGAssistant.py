@@ -4,6 +4,19 @@ import time
 import win32api, win32con
 import PySimpleGUI as sg
 import math
+import winsound
+
+#Sound
+f1 = 1200  # Set Frequency 
+f2 = 800
+f3 = 2000
+f_m1 = 523
+f_m2 = 587
+f_m3 = 659
+f2 = 800
+d1 = 500  # Set Duration
+d2 = 1000
+
 
 # No Recoil State
 isNoRecoil = False
@@ -17,9 +30,9 @@ isUIOpen = False
 # Weapon Mode
 WeaponMode = "Auto"
 #Recoil Alleviation Parameters
-ra_1 = 10
-ra_2 = 15
-ra_3 = 10
+ra_1 = 5
+ra_2 = 5
+ra_3 = 5
 
 #Measuring Point
 point_1=[0,0]
@@ -53,7 +66,7 @@ def SetRecoilParameters(x1,x2,x3):
                  [sg.Text('Semi-ForcedAuto')],
                  [sg.Slider(range=(1, 100), orientation='h', size=(34, 20), default_value=x3)],
                  [sg.Text('   ')],
-                 [sg.Submit(), sg.Cancel()]]      
+                 [sg.Submit(), sg.Cancel()]]     
 
     window = sg.Window('Window Title', layout)    
 
@@ -73,7 +86,6 @@ print('PUBG Assistant Activated')
 print('Press Ctrl+Enter to activate Recoil Alleviation')
 print('Press Shift+Enter to adjust the Compensation Value')
 print('Press Ctrl+1/Ctrl+2/Ctrl+3 to switch to Different Mode')
-print('Press M to Measure')
 
 while 1:
     if keyboard.is_pressed('esc'):
@@ -107,40 +119,73 @@ while 1:
     elif keyboard.is_pressed('ctrl+enter'): 
         while keyboard.is_pressed('ctrl+enter'):
             continue
-        sg.theme('DarkAmber')
-
         if isNoRecoil == False:
             while keyboard.is_pressed('ctrl+enter'):
                 continue
             isNoRecoil = True
+            winsound.Beep(f3, 250)
+            winsound.Beep(f3, 250)
             #print("No Recoil:",isNoRecoil)
         elif isNoRecoil == True:
             while keyboard.is_pressed('ctrl+enter'):
                 continue
             isNoRecoil = False
+            winsound.Beep(f3, d1)
             #print("No Recoil:",isNoRecoil)
-        sg.popup_timed("No Recoil:",isNoRecoil,"Weapon Mode",WeaponMode,location = (100,100),auto_close_duration=0.3)
+        #sg.popup_timed("No Recoil:",isNoRecoil,"Weapon Mode",WeaponMode,location = (100,100),auto_close_duration=0.3)
     
     elif keyboard.is_pressed('ctrl+1'):
         while keyboard.is_pressed('ctrl+1'):
             continue
+        winsound.Beep(f_m1, d1)
         WeaponMode = "Auto"
         #print("Weapon Mode:",WeaponMode)
-        sg.popup_timed("Weapon Mode:",WeaponMode,location = (100,100),auto_close_duration=0.3)
+        #sg.popup_timed("Weapon Mode:",WeaponMode,location = (100,100),auto_close_duration=0.3)
 
     elif keyboard.is_pressed('ctrl+2'):
         while keyboard.is_pressed('ctrl+1'):
             continue
+        winsound.Beep(f_m2, d1)
         WeaponMode = "Semi"
         #print("Weapon Mode:",WeaponMode)
-        sg.popup_timed("Weapon Mode:",WeaponMode,location = (100,100),auto_close_duration=0.3)
+        #sg.popup_timed("Weapon Mode:",WeaponMode,location = (100,100),auto_close_duration=0.3)
 
     elif keyboard.is_pressed('ctrl+3'):
         while keyboard.is_pressed('ctrl+3'):
             continue
+        winsound.Beep(f_m3, d1)
         WeaponMode = "Semi-ForcedAuto"
         #print("Weapon Mode:",WeaponMode)
-        sg.popup_timed("Weapon Mode:",WeaponMode,location = (100,100),auto_close_duration=0.3)
+        #sg.popup_timed("Weapon Mode:",WeaponMode,location = (100,100),auto_close_duration=0.3)
+
+    elif keyboard.is_pressed('Up'):
+        while keyboard.is_pressed('Up'):
+            continue
+        winsound.Beep(f1, d1)
+        if WeaponMode == "Auto":
+            ra_1+=1
+            print("ra_1:",ra_1)
+        elif WeaponMode == "Semi":
+            ra_2+=1
+            print("ra_2:",ra_2)
+        elif WeaponMode == "Semi-ForcedAuto":
+            ra_3+=1
+            print("ra_3:",ra_3)
+        
+    elif keyboard.is_pressed('Down'):
+        while keyboard.is_pressed('Down'):
+            continue
+        winsound.Beep(f2, d1)
+        if WeaponMode == "Auto":
+            ra_1-=1
+            print("ra_1:",ra_1)
+        elif WeaponMode == "Semi":
+            ra_2-=1
+            print("ra_2:",ra_2)
+        elif WeaponMode == "Semi-ForcedAuto":
+            ra_3-=1
+            print("ra_3:",ra_3)
+        
 
     if isTabkeyPressed or isMkeyPressed:
         isUIOpen = True
@@ -206,48 +251,6 @@ while 1:
             print("Measure Mode",isMkeyPressed)
             print("Tab:",isTabkeyPressed)
 
-        if (win32api.GetAsyncKeyState(0x01)&0x8000) and isMkeyPressed and keyboard.is_pressed('ctrl'):
-            win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP,0,0,0,0)
-            if m_point == 1:
-                match_1=win32api.GetCursorPos()
-                #print("Match Point1:")
-                #print(match_1)
-                sg.popup_timed("Match Point 1",match_1,location = (100,100),auto_close_duration=0.3)
-                m_point=2
-            elif m_point == 2:
-                match_2=win32api.GetCursorPos()
-                #print("Match Point2:")
-                #print(match_2)
-                sg.popup_timed("Match Point 2",match_2,location = (100,100),auto_close_duration=0.3)
-                m_point=1
-                mDistance = math.sqrt((match_2[0]-match_1[0])*(match_2[0]-match_1[0])+(match_2[1]-match_1[1])*(match_2[1]-match_1[1]))
-                #print("Pixel Distance",mDistance) 
-                #sg.popup_timed("Pixel Distance",mDistance,location = (100,100),auto_close_duration=1)
-                scale = 1/mDistance*100
-
-        # Click to input 1st point and 2nd point of measuring
-        elif (win32api.GetAsyncKeyState(0x01)&0x8000) and isMkeyPressed and keyboard.is_pressed('shift'):
-            win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP,0,0,0,0)      
-            if i_point == 1:
-                point_1=win32api.GetCursorPos()
-                #print("Point1:")
-                #print(point_1)
-                sg.popup_timed("Point1",point_1,location = (100,100),auto_close_duration=0.3)
-                i_point=2
-            elif i_point == 2:
-                point_2=win32api.GetCursorPos()
-                #print("Point2:")
-                #print(point_2)
-                sg.popup_timed("Point2",point_2,location = (100,100),auto_close_duration=0.3)
-                i_point=1
-                realDistance = math.sqrt((point_2[0]-point_1[0])*(point_2[0]-point_1[0])+(point_2[1]-point_1[1])*(point_2[1]-point_1[1]))
-                realDistance=realDistance*scale
-                #print("Real Distance",realDistance) 
-                sg.popup_timed("Real Distance",realDistance,location = (100,100),auto_close_duration=1)
-
-    # Click to input 1st point and 2nd point of matching
-
-        #pass
-    time.sleep(0.1)
+    time.sleep(0.05)
     
     
